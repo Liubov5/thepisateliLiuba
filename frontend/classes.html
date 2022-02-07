@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		class Player {
+			name
+			amount
+			constructor(name) {
+				this.name = name
+			}
+
+			hello() {
+				console.log('Hello from parent')
+			}
+
+			get bigName() {
+				return this.name.toUpperCase()
+			}
+
+			set bigName(value) {
+				this.name = value.toUpperCase()
+			}
+		}
+
+		class Enemy extends Player {
+			constructor(arg) {
+				super(arg)
+				Enemy.enemies.push(this)
+				amount++
+			}
+
+			shoot() {
+				console.log('shoot from ' + this.name)
+			}
+
+			hello() {
+				super.hello()
+				console.log('hello from enemy')
+			}
+
+			die() {
+				amount--
+			}
+
+			static enemies = []
+
+			static amount = 0
+
+			static init() {
+				new Enemy('john')
+				new Enemy('john2')
+				new Enemy('john3')
+				new Enemy('john4')
+				new Enemy('john5')
+				new Enemy('john6')
+
+				Enemy.enemies.forEach(enemyEx => {
+					let enemy = document.createElement('div')
+					enemy.style.width = "100px"
+					enemy.style.height = "100px"
+					enemy.style.marginRight = "10px"
+					enemy.style.background = "red"
+
+					enemyEx.html = enemy
+
+					document.body.appendChild(enemy)
+				})
+			}
+
+			static changeOne(name) {
+				//Enemy.enemies.filter() {
+
+				//}
+			}
+
+			static delete() {
+				console.log('init enemy')
+
+			}
+
+			static getAmount() {
+				return Enemy.amount
+			}
+		}
+
+	</script>
+</body>
+</html>

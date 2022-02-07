@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<script>
+			class Car {
+				engine;
+				kresla;
+
+				constructor() {
+					this.engine = new Engine(100);
+					this.kresla = new Kresla("red", "кожарожа");
+				}
+			}
+
+			class Engine {
+				horsepower;
+
+				constructor(power) {
+					this.horsepower = power;
+				}
+
+				start() {
+					console.log("WROOOM WROOM");
+				}
+			}
+
+			class Kresla {
+				color;
+				material;
+
+				constructor(color, material) {
+					this.color = color;
+					this.material = material;
+				}
+
+				info() {
+					console.log(`my color is ${this.color} and material is ${this.material}`);
+				}
+			}
+		</script>
+	</body>
+</html>

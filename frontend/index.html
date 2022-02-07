@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+			}
+		</style>
+		<script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+		<script src="https://cdn.socket.io/4.2.0/socket.io.min.js" integrity="sha384-PiBR5S00EtOj2Lto9Uu81cmoyZqR57XcOna1oAuVuIEjzj0wpqDVfD0JA9eXlRsj" crossorigin="anonymous"></script>
+	</head>
+	<body>
+		<script>
+			var socket;
+
+			function initSocket() {
+				if(document.location.hostname==='81.163.30.125'){
+					socket = io("http://81.163.30.125:3000");
+				} else {
+					socket = io("http://localhost:3000");
+				}		
+				
+				
+			}
+
+			function preload() {
+				this.load.spritesheet("letters", "/frontend/images/letters_ru.png", {
+					frameWidth: 100,
+					frameHeight: 100,
+				});
+				this.load.image("clearButton", "/frontend/images/clearButton.png");
+				this.load.image("gameOver", "/frontend/images/gameO.png");
+				this.load.image("restart", "/frontend/images/restart.png");
+			}
+
+			function create() {
+				initSocket();
+
+				socket.on("waiting-enemy", ()=>{
+					console.log("ждём врага")
+				})
+
+			
+				//инициализация игроков
+				socket.on("room-inited", (data) => {
+
+					data.players.forEach((player, index)=>{
+						
+						Player.initPlayers([{
+							name: player.name,
+							socket_id:player.socket_id,
+							roomName:player.roomName
+							}
+						], this);
+						
+						if(socket.id === player.socket_id){
+							new Word(data.word, this, 100)
+							Player.myIndex = player.index;					
+							console.log("Вы играете за " + Player.me.name);
+						}		
+					})					
+				});
+				
+				let clearButton = this.add.sprite(window.innerWidth / 2 - 150, window.innerHeight / 2 + 100, "clearButton").setInteractive();
+				clearButton.on("pointerdown", function (e) {
+					Player.me.clearCurrentWord();
+				});
+			
+
+				
+				Player.bindSockets();
+
+				/*socket.on("room-inited", (data) => {
+					Player.roomName = data.roomName;
+					new Word(data.word, this, 100);
+					console.log(data.word.variants);
+				});
+
+				let clearButton = this.add.sprite(window.innerWidth / 2 - 150, window.innerHeight / 2 + 100, "clearButton").setInteractive();
+
+				let scene = this;
+
+				clearButton.on("pointerdown", function (e) {
+					scene.input.mouse.disableContextMenu();
+
+					Player.me.clearCurrentWord();
+				});*/
+
+
+
+			}
+
+			
+
+			var config = {
+				type: Phaser.AUTO,
+				width: window.innerWidth,
+				height: window.innerHeight,
+				scene: {
+					preload: preload,
+					create: create,
+					//update: update
+				},
+			};
+
+			let game = new Phaser.Game(config);
+
+
+			/*socket.on("debug", (debug) => {
+					console.log("debug :", debug);
+				});*/
+		</script>
+		<script src="Player.js"></script>
+		<script src="Word.js"></script>
+	</body>
+</html>
